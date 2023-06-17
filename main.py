@@ -27,7 +27,7 @@ def web_scraper(event, context):
         "Cache-Control": "max-age=0"}
      web_url = "https://INSERT_WEBSITE_URL"
      login_url = f"{web_url}/login"
-     max_url = f"{web_url}/maximum"
+     max_url = f"{web_url}/limit"
      product_api_url = f"{web_url}/product_api"
      product_main_url = f"{web_url}/product_main"
 
@@ -52,10 +52,10 @@ def web_scraper(event, context):
           # login with token, email, and password
           sess.post(login_url, data=payload)
           
-          # if threshold for product testings is met, don't continue to check for products
-          threshold_json = sess.get(max_url).json()
-          p_thresh = threshold_json["product_tests"]
-          if (p_thresh["done"] < p_thresh["maximum"]):
+          # if limit for product testings is met, don't continue to check for products
+          limit_json = sess.get(max_url).json()
+          p_thresh = limit_json["product_tests"]
+          if (p_thresh["done"] < p_thresh["limit"]):
                product_json = sess.get(product_api_url).json()
                product_main_response = sess.get(product_main_url)
                product_main_soup = BeautifulSoup(product_main_response.text, "html.parser")
@@ -98,4 +98,4 @@ def web_scraper(event, context):
                     else:
                          print("No products currently available.")     
           else:
-               print("Reached max product testing threshold, no products will show.")   
+               print("Reached max product testing limit, no products will show.")   
