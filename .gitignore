@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# environments
+.venv/
+venv/
+
+# PyCharm
+.idea/
+
+# pdm
+pdm.lock
+.pdm-python
+
+# ruff
+.ruff_cache
+
+# secrets
+secrets/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+
+# macOS
+.DS_Store
+
+# Back-ups
+.archive/*
+*.bak
+*.back
+
+.env
