@@ -1,17 +1,17 @@
 import json
 import os
 
-# TODO: Uncomment for Local Development, o/w keep commented
-from dotenv import load_dotenv
 from scrapy import Request, Spider
 from scrapy.http import FormRequest
 
 from ..items import ProductItem
 
-load_dotenv()
-SITE_URL = os.getenv("SITE_URL")
-SITE_USER = os.getenv("SITE_USER")
-SITE_PASS = os.getenv("SITE_PASS")
+# TODO: Uncomment for Local Development, o/w keep commented
+# from dotenv import load_dotenv
+# load_dotenv()
+# SITE_URL = os.getenv("SITE_URL")
+# SITE_USER = os.getenv("SITE_USER")
+# SITE_PASS = os.getenv("SITE_PASS")
 
 # TODO: Uncomment for Production, o/w keep commented
 SITE_URL = os.environ.get("SITE_URL")

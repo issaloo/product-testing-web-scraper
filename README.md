@@ -31,8 +31,8 @@ Please take a look at the following guides on writing code:
 
 ```shell
 cd ~/GitHub/issaloo
-git clone git@github.com:issaloo/standard-code-quality-workflow.git
-cd standard-code-quality-workflow
+git clone git@github.com:issaloo/product-testing-web-scraper.git
+cd product-testing-web-scraper
 ```
 
 2. Install pdm globally
@@ -68,6 +68,20 @@ eval $(pdm venv activate)
 ```shell
 deactivate
 ```
+
+### Running Locally
+
+1. Set Up Environment Files
+
+   1. Copy `.env.template` to environment file
+
+      ```Shell
+      cp .env.local.template .env
+      ```
+
+   2. Fill in configs for `.env`
+
+2. Comment out production settings and uncomment development settings in the code
 
 ### Set Up Standardized Version Control
 
