@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from sendgrid.helpers.mail import Content, Email, Mail, To
 
 
-def web_scraper(event, context):
+def ppoc_scraper(event, context):
     """Triggered from a message on a Cloud Pub/Sub topic.
 
     Args:
@@ -28,19 +28,19 @@ def web_scraper(event, context):
         "Connection": "keep-alive",
         "Cache-Control": "max-age=0",
     }
-    web_url = "https://INSERT_WEBSITE_URL"
-    login_url = f"{web_url}/login"
-    max_url = f"{web_url}/limit"
-    product_api_url = f"{web_url}/product_api"
-    product_main_url = f"{web_url}/product_main"
+    ppoc_url = "https://beta.ppoc.club"
+    login_url = f"{ppoc_url}/login"
+    threshold_url = f"{ppoc_url}/api/thresholds"
+    product_api_url = f"{ppoc_url}/api/recommended/campaigns"
+    product_main_url = f"{ppoc_url}/product-tests"
 
     # set sendgrid variables
     sg = sendgrid.SendGridAPIClient(api_key=email_api_key)
-    from_email = Email("INSERT_FROM_EMAIL")
-    to_email = To("INSERT_TO_EMAIL")
-    subject = "Product Testing Available!"
+    from_email = Email("digestiblecontents@gmail.com")
+    to_email = To("issactranloo@gmail.com")
+    subject = "PPOC Products Available!"
 
-    # scrape website
+    # scrape PPOC website
     with requests.Session() as sess:
         login_response = sess.get(login_url, headers=headers)
 
@@ -55,10 +55,10 @@ def web_scraper(event, context):
         # login with token, email, and password
         sess.post(login_url, data=payload)
 
-        # if limit for product testings is met, don't continue to check for products
-        limit_json = sess.get(max_url).json()
-        p_thresh = limit_json["product_tests"]
-        if p_thresh["done"] < p_thresh["limit"]:
+        # if threshold for product testings is met, don't continue to check for products
+        threshold_json = sess.get(threshold_url).json()
+        p_thresh = threshold_json["product_tests"]
+        if p_thresh["done"] < p_thresh["threshold"]:
             product_json = sess.get(product_api_url).json()
             product_main_response = sess.get(product_main_url)
             product_main_soup = BeautifulSoup(product_main_response.text, "html.parser")
@@ -70,8 +70,8 @@ def web_scraper(event, context):
                 email_product_list = []
                 for product in product_list:
                     product_price = product["price"]
-                    product_name = product["product_name"]
-                    product_link = f"{web_url}{product['product_url']}"
+                    product_name = product["product_test"]["three_words"]
+                    product_link = f"{ppoc_url}{product['claim_url']}"
                     email_product_list.append((product_name, product_price, product_link))
                 email_product_list = sorted(email_product_list, key=lambda tup: tup[1], reverse=True)
                 email_product_content = [
@@ -90,10 +90,11 @@ def web_scraper(event, context):
             else:
                 product_main_response = sess.get(product_main_url)
                 product_main_soup = BeautifulSoup(product_main_response.text, "html.parser")
+                see_job = product_main_soup.find(text="See Job Details")
                 see_product = product_main_soup.find(text="See Product Details")
-                if see_product:
+                if see_job or see_product:
                     # send email
-                    email_product_content = f"{product_main_url}\n\n There is a potential Product!"
+                    email_product_content = f"{product_main_url}\n\n There is a potential Job!"
                     content = Content("text/plain", email_product_content)
                     mail = Mail(from_email, to_email, subject, content)
                     mail_json = mail.get()
@@ -101,4 +102,4 @@ def web_scraper(event, context):
                 else:
                     print("No products currently available.")
         else:
-            print("Reached max product testing limit, no products will show.")
+            print("Reached max product testing threshold, no products will show.")
