@@ -9,7 +9,7 @@ authors = [
 requires-python = ">=3.9,<3.11"
 license = { text = "All Rights Reserved" }
 dependencies = [
-    "sendgrid>=2.2.0",
+    "sendgrid>=6.11.0",
     "scrapy>=2.11.0",
     "python-dotenv>=1.0.0",
 ]
