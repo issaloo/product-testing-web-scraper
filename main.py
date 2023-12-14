@@ -9,7 +9,7 @@ def product_testing_web_scraper(event, context):
     settings = get_project_settings()
     settings.setdict(
         {
-            "LOG_LEVEL": "Error",
+            "LOG_LEVEL": "ERROR",
             "LOG_ENABLED": True,
         }
     )
