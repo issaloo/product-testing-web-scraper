@@ -1,6 +1,7 @@
 import json
 import os
 
+# TODO: Uncomment for Local Development, o/w keep commented
 from dotenv import load_dotenv
 from scrapy import Request, Spider
 from scrapy.http import FormRequest
@@ -8,19 +9,19 @@ from scrapy.http import FormRequest
 from ..items import ProductItem
 
 load_dotenv()
-
-# TODO: Uncomment for Local Development, o/w keep commented
 SITE_URL = os.getenv("SITE_URL")
 SITE_USER = os.getenv("SITE_USER")
 SITE_PASS = os.getenv("SITE_PASS")
+
+# TODO: Uncomment for Production, o/w keep commented
+SITE_URL = os.environ.get("SITE_URL")
+SITE_USER = os.environ.get("SITE_USER")
+SITE_PASS = os.environ.get("SITE_PASS")
 
 SITE_LOGIN_URL = f"{SITE_URL}/login"
 SITE_THRESHOLD_API = f"{SITE_URL}/api/thresholds"
 SITE_PRODUCT_API = f"{SITE_URL}/api/recommended/campaigns"
 SITE_PRODUCT_URL = f"{SITE_URL}/product-tests"
-
-# TODO: Uncomment for Production, o/w keep commented
-# TODO: fill in using environment variables here
 
 
 class MainSpider(Spider):

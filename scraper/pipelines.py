@@ -1,24 +1,26 @@
 import os
 
 import scrapy
-from dotenv import load_dotenv
 from itemadapter import ItemAdapter
 from scrapy import Request
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Content, Email, Mail, To
 
-load_dotenv()
-
 # TODO: Uncomment for Local Development, o/w keep commented
-SITE_URL = os.getenv("SITE_URL")
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-SENDGRID_FROM_EMAIL = os.getenv("SENDGRID_FROM_EMAIL")
-SENDGRID_TO_EMAIL = os.getenv("SENDGRID_TO_EMAIL")
-
-SITE_PRODUCT_URL = f"{SITE_URL}/product-tests"
+# from dotenv import load_dotenv
+# load_dotenv()
+# SITE_URL = os.getenv("SITE_URL")
+# SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+# SENDGRID_FROM_EMAIL = os.getenv("SENDGRID_FROM_EMAIL")
+# SENDGRID_TO_EMAIL = os.getenv("SENDGRID_TO_EMAIL")
 
 # TODO: Uncomment for Production, o/w keep commented
-# TODO: add Env variables here
+SITE_URL = os.environ.get("SITE_URL")
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+SENDGRID_FROM_EMAIL = os.environ.get("SENDGRID_FROM_EMAIL")
+SENDGRID_TO_EMAIL = os.environ.get("SENDGRID_TO_EMAIL")
+
+SITE_PRODUCT_URL = f"{SITE_URL}/product-tests"
 
 
 class PrepareProductContentPipeline:
@@ -87,8 +89,6 @@ class SendEmailPipeline:
             mail_json = mail.get()
             sg.client.mail.send.post(request_body=mail_json)
             Request(url=product_api_list[0][2])
-        response = Request(url=SITE_PRODUCT_URL)
-        # TODO: add credentials at this step.. how to do that?
-        # TODO: maybe do a callback?
-        return response.body
-        # return None
+            return "Product tests available!"
+        else:
+            return "No products tests."
